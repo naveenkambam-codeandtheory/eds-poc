@@ -1,76 +1,50 @@
 .accordion {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  background: #efefef;
+  border: 1px solid #dddddd;
+  border-radius: 6px;
 }
 
-.accordion-section {
-  border: 1px solid #dadada;
-  border-radius: 8px;
-  background: var(--background-color);
-  overflow: hidden;
-}
-
-.accordion-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 16px 18px;
+.accordion .item-title {
   cursor: pointer;
-  font-weight: 600;
-  user-select: none;
+  padding: 12px;
+  border-bottom: 1px solid #dddddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.accordion-header:focus-visible {
-  outline: 2px solid var(--link-color);
+.accordion .item-title::after {
+  width: 10px;
+  height: 10px;
+  border-bottom: 2px solid #a7a7a7;
+  border-right: 2px solid #a7a7a7;
+  transform-origin: 75% 75%;
+  transform: rotate(-45deg) translateY(-50%);
+  transition: transform 0.1s ease;
+  content: '';
+}
+
+.accordion .item-title.open {
+  background: #dddddd;
+}
+
+.accordion .item-title.open::after {
+  transform: rotate(-135deg) translateX(50%);
+}
+
+.accordion .item-content {
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 12px;
+  border-bottom: 1px solid #dddddd;
+}
+
+.accordion .item-title.open + .item-content {
+  display: grid;
+}
+
+.accordion .item-title:focus-visible {
+  outline: 2px solid #3b63fb;
   outline-offset: -2px;
-}
-
-.accordion-header::after {
-  content: '+';
-  font-size: 1.4rem;
-  line-height: 1;
-  color: var(--text-color);
-}
-
-.accordion-section.active .accordion-header::after {
-  content: '–';
-}
-
-.accordion-content {
-  max-height: 0;
-  overflow: hidden;
-  padding: 0 18px;
-  transition: max-height 0.3s ease, padding 0.3s ease;
-}
-
-.accordion-section.active .accordion-content {
-  padding: 0 18px 18px;
-}
-
-.accordion-content > :first-child {
-  margin-top: 0;
-}
-
-.accordion-content > :last-child {
-  margin-bottom: 0;
-}
-
-@media (width >= 900px) {
-  .accordion {
-    gap: 16px;
-  }
-
-  .accordion-header {
-    padding: 18px 20px;
-  }
-
-  .accordion-content {
-    padding: 0 20px;
-  }
-
-  .accordion-section.active .accordion-content {
-    padding: 0 20px 20px;
-  }
 }
