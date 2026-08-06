@@ -2,17 +2,39 @@ function getInstagramEmbedUrl(inputUrl) {
   try {
     const url = new URL(inputUrl);
     const host = url.hostname.toLowerCase();
-    const isInstagramHost = host === 'instagram.com' || host === 'www.instagram.com' || host === 'instagr.am';
+    const isInstagramHost = host === 'instagram.com'
+      || host === 'www.instagram.com'
+      || host === 'instagr.am';
 
     if (!isInstagramHost) return null;
 
     const pathMatch = url.pathname.match(/^\/(p|reel|tv)\/[^/]+/i);
     if (!pathMatch) return null;
 
-    return `https://www.instagram.com${url.pathname}/embed/captioned/`;
+    return url.toString().replace(/\/$/, '');
   } catch (error) {
     return null;
   }
+}
+
+function loadInstagramEmbedScript() {
+  const existingScript = document.querySelector('script[src="https://www.instagram.com/embed.js"]');
+  if (existingScript) {
+    if (window.instgrm?.Embeds?.process) {
+      window.instgrm.Embeds.process();
+    }
+    return;
+  }
+
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = 'https://www.instagram.com/embed.js';
+  script.onload = () => {
+    if (window.instgrm?.Embeds?.process) {
+      window.instgrm.Embeds.process();
+    }
+  };
+  document.head.append(script);
 }
 
 function buildFallbackLink(url) {
@@ -35,14 +57,13 @@ export default function decorate(block) {
   frameWrapper.className = 'embed-frame';
 
   if (embedUrl) {
-    const iframe = document.createElement('iframe');
-    iframe.src = embedUrl;
-    iframe.title = 'Instagram embed';
-    iframe.loading = 'lazy';
-    iframe.allow = 'autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share';
-    iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-    iframe.setAttribute('allowfullscreen', 'true');
-    frameWrapper.append(iframe);
+    const quote = document.createElement('blockquote');
+    quote.className = 'instagram-media';
+    quote.setAttribute('data-instgrm-permalink', embedUrl);
+    quote.setAttribute('data-instgrm-version', '14');
+    quote.setAttribute('data-instgrm-captioned', 'true');
+    frameWrapper.append(quote);
+    loadInstagramEmbedScript();
   } else {
     const fallback = buildFallbackLink(sourceLink?.href || '#');
     frameWrapper.append(fallback);
