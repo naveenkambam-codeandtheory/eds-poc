@@ -1,4 +1,3 @@
-
 export default function decorate(block) {
   const accordion = document.createElement('div');
   accordion.className = 'accordion';

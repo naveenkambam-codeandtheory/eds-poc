@@ -4,10 +4,111 @@
   margin: 24px auto;
 }
 
-.video[data-embed-loaded='false']:not(.placeholder) {
+.video[data-embed-loaded='false']:not(.placeholder, .autoplay) {
   /* reserve an approximate space to avoid extensive layout shifts */
   aspect-ratio: 16 / 9;
 }
+
+.video .video-embed {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.video .video-embed iframe,
+.video .video-embed video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* background video
+   ------------------------------------------------------------------ */
+
+.video.autoplay {
+  position: relative;
+  max-width: none;
+  min-height: 420px;
+  overflow: hidden;
+  isolation: isolate;
+
+  /* shows while the video buffers, and behind letterboxing */
+  background-color: #000;
+}
+
+/* the media layer fills the block instead of keeping a 16:9 box */
+.video.autoplay .video-embed {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  aspect-ratio: auto;
+  height: 100%;
+  pointer-events: none;
+}
+
+.video.autoplay .video-embed video {
+  object-fit: cover;
+}
+
+/* iframes ignore object-fit, so the player is scaled up and centred until it
+   covers the block in both axes (the classic 16:9 cover trick) */
+.video.autoplay .video-embed iframe {
+  inset: auto;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 56.25vw; /* 100 / (16/9) */
+  min-width: 177.78vh; /* 100 * (16/9) */
+  min-height: 100%;
+  transform: translate(-50%, -50%);
+}
+
+/* dim only when there is text that needs the contrast */
+.video.autoplay.has-content::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: rgb(0 0 0 / 35%);
+  pointer-events: none;
+}
+
+.video.autoplay > .video-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 420px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px;
+  color: #fff;
+  text-align: left;
+  pointer-events: none;
+}
+
+.video.autoplay > .video-content :is(h1, h2, h3, h4, h5, h6, p) {
+  color: inherit;
+}
+
+.video.autoplay > .video-content :is(a, button) {
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video.autoplay .video-embed video {
+    /* poster frame stays, motion does not */
+    animation: none;
+  }
+}
+
+/* click-to-play placeholder
+   ------------------------------------------------------------------ */
 
 .video > div {
   display: flex;
@@ -32,11 +133,8 @@
   inset: 0;
 }
 
-.video[data-embed-loaded='true'] .video-placeholder,
-.video[data-embed-loaded='false'] .video-placeholder + * {
-  visibility: hidden;
-  height: 0;
-  width: 0;
+.video[data-embed-loaded='true'] .video-placeholder {
+  display: none;
 }
 
 .video .video-placeholder picture img {

@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
-    <loc>https://main--eds-poc--naveenkambam-codeandtheory.aem.page/sitemap.xml</loc>
+    <loc>/sitemap.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>/sitemap-en.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>/sitemap-fr.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>/sitemap-de.xml</loc>
   </sitemap>
   <!-- add custom sitemap entries here
   <sitemap>

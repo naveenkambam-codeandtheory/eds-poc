@@ -16,9 +16,9 @@ const loadScript = (url, callback, type) => {
   return script;
 };
 
-const getDefaultEmbed = (url) => `<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+const getDefaultEmbed = (url) => `<div class="embed-default">
     <iframe src="${url.href}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen=""
-      scrolling="no" allow="encrypted-media" title="Content from ${url.hostname}" loading="lazy">
+      scrolling="yes" allow="encrypted-media" title="Content from ${url.hostname}" loading="lazy">
     </iframe>
   </div>`;
 
@@ -82,7 +82,7 @@ const loadEmbed = (block, link, autoplay) => {
     block.classList = `block embed embed-${config.match[0]}`;
   } else {
     block.innerHTML = getDefaultEmbed(url);
-    block.classList = 'block embed';
+    block.classList = 'block embed embed-page';
   }
   block.classList.add('embed-is-loaded');
 };
