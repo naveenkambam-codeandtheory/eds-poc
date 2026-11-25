@@ -208,10 +208,31 @@ function loadDelayed() {
   // load anything that can be postponed to the latest here
 }
 
+function initSidekick() {
+  const handlers = {
+    'custom:view-plain': () => window.open(`${window.location.pathname}.plain.html`, '_blank'),
+    'custom:pagespeed': () => window.open(
+      `https://pagespeed.web.dev/analysis?url=${encodeURIComponent(window.location.href)}`,
+      '_blank',
+    ),
+  };
+  const attach = (sk) => Object.entries(handlers)
+    .forEach(([evt, fn]) => sk.addEventListener(evt, fn));
+
+  const sk = document.querySelector('aem-sidekick');
+  if (sk) attach(sk);
+  else {
+    document.addEventListener('sidekick-ready', () => {
+      attach(document.querySelector('aem-sidekick'));
+    }, { once: true });
+  }
+}
+
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
   loadDelayed();
+  initSidekick();
 }
 
 loadPage();
