@@ -1,3 +1,5 @@
+import DA_SDK from 'https://da.live/nx/utils/sdk.js';
+
 (async function init() {
   // eslint-disable-next-line no-unused-vars
   const { context, token, actions } = await DA_SDK;
